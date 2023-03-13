@@ -12,8 +12,6 @@ public class Main {
             lock[i] = new Semaphore(1);
         }
     }
-
-
     public static void main(String[] args) {
         // Get number of domains N
         Random random = new Random();
@@ -28,9 +26,31 @@ public class Main {
         lockMaker(M);
 
         // Populate Access Matrix
+        int RorW;
+        int dSwitch;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M+N; j++) {
+                if (j < M) { // Object R/W access
+                    RorW = random.nextInt(4);
+                    if (RorW == 0) AM[i][j] = " - ";
+                    else if (RorW == 2) AM[i][j] = " R ";
+                    else if (RorW == 3) AM[i][j] = " W ";
+                    else AM[i][j] = "R/W";
+                } else { // Domain switch access
+                    dSwitch = random.nextInt(2);
+                    if (dSwitch == 0 || j-M == i) AM[i][j] = "  -  "; // Don't allow switching to self
+                    else AM[i][j] = "allow";
+                }
+            }
+        }
+        System.out.println(N + " domains");
+        System.out.println(M + " objects");
+        for (int i = 0; i < N; i++) {
+            System.out.println("D" + (i+1) + ": " + Arrays.toString(AM[i]));
+        }
+        // Create object buffers
 
         // Create domain threads
 
-        // Create object buffers
     }
 }
