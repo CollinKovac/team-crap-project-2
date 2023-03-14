@@ -2,10 +2,10 @@ import java.util.concurrent.Semaphore;
 
 public class Domain implements Runnable {
 
-    private int threadNum;
-    private static int N;
     private static int M;
-    public Domain(int objects, int domains, int thread) {
+    private static int N;
+    private int threadNum;
+    public Domain(int objects, int domains, int thread ) {
         M = objects;
         N = domains;
         this.threadNum = thread;
