@@ -3,8 +3,12 @@ import java.util.concurrent.Semaphore;
 public class Domain implements Runnable {
 
     private int threadNum;
-    public Domain(int objects) {
-        this.threadNum = objects;
+    private static int N;
+    private static int M;
+    public Domain(int objects, int domains, int thread) {
+        M = objects;
+        N = domains;
+        this.threadNum = thread;
     }
 
     //semaphore creation used for the readers and writers fucntions
@@ -44,6 +48,9 @@ public class Domain implements Runnable {
 
     @Override
     public void run() {
+        for(int i = 0; i < 5; i++){
+            int request = (int) (Math.random() * (M+N));
+        }
 
     }
 
