@@ -43,14 +43,21 @@ public class Main {
                 }
             }
         }
-        System.out.println(N + " domains");
-        System.out.println(M + " objects");
-        for (int i = 0; i < N; i++) {
-            System.out.println("D" + (i+1) + ": " + Arrays.toString(AM[i]));
-        }
+
         // Create object buffers
 
         // Create domain threads
 
+        // Print Access Matrix
+        System.out.print(N + " domains\n" + M + " objects\nAccess Control Matrix:\n     ");
+        for (int i = 0; i < M+N; i++) {
+            if (i < M) System.out.print("F" + (i+1) + "   ");
+            else System.out.print(" D" + (i+1-M) + "    ");
+        }
+        for (int i = 0; i < N; i++) {
+            System.out.print("\nD" + (i+1) + "  ");
+            for (int j = 0; j < M+N; j++)
+                System.out.print(AM[i][j] + "  ");
+        }
     }
 }
