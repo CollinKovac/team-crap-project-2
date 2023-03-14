@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 import java.util.Random;
+import java.util.LinkedList;
 
 public class Main {
 
@@ -44,12 +45,15 @@ public class Main {
             }
         }
 
-        // Create object buffers
+        // Create strings for objects
+        String[] object = {"May chaos take the world!", "A man cannot kill a god...", "Bear witness!",
+                "Thy strength befits a crown.", "I command thee kneel!", "Together, we will devour the very gods!",
+                "Sir Gideon Ofnir, the All-nowing!"};
 
         // Create domain threads
 
         // Print Access Matrix
-        System.out.print(N + " domains\n" + M + " objects\nAccess Control Matrix:\n     ");
+        System.out.print(N + " domains\n" + M + " objects\nAccess Matrix:\n     ");
         for (int i = 0; i < M+N; i++) {
             if (i < M) System.out.print("F" + (i+1) + "   ");
             else System.out.print(" D" + (i+1-M) + "    ");
@@ -59,5 +63,8 @@ public class Main {
             for (int j = 0; j < M+N; j++)
                 System.out.print(AM[i][j] + "  ");
         }
+
+        // Create Access List (array of linked lists for each object/domain)
+        String[] AL = new String[M+N];
     }
 }
