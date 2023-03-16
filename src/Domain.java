@@ -16,8 +16,9 @@ public class Domain implements Runnable {
     static Semaphore mutex = new Semaphore(1);
     static int readcount = 0;
 
-    //reader function to run when accessible
-    private static void reader(int threadNum) throws InterruptedException {
+    //reader function to run when accessible. int resourceRequest is the index
+    //of which resource is being requested
+    private static void reader(int resourceRequest) throws InterruptedException {
         mutex.acquire();
         readcount++;
         if(readcount == 1){
@@ -25,7 +26,7 @@ public class Domain implements Runnable {
         }
         mutex.release();
 
-        //read here
+        System.out.println("Resource" +resourceRequest+ " contains: " +object[resourceRequest]);
 
         mutex.acquire();
         readcount--;
@@ -35,11 +36,17 @@ public class Domain implements Runnable {
         mutex.release();
     }
 
-    // writer function to run when accessible
-    private static void write(int threadNum) throws InterruptedException {
+    // this array will be used to choose what phrase to put in place of the
+    // index that is being overwritten
+    static String[] writerObject = {"Chibaku Tensei","Kotoamatsukami","bijudama", "edo tensei" , "kamui", "Reaper Death Seal"};
+
+    // writer function to run when accessible. int resourceRequest is the resource
+    // that is being requested.
+    private static void write(int resourceRequest) throws InterruptedException {
         area.acquire();
 
-        //write here
+        object[resourceRequest] = writerObject[(int) (Math.random() * (6))];
+        System.out.println("writing " +object[resourceRequest]+ " to resource " +resourceRequest);
 
         area.release();
     }
