@@ -51,6 +51,11 @@ public class Main {
                 "Sir Gideon Ofnir, the All-nowing!"};
 
         // Create domain threads
+        Domain domain;
+        for(int i = 0; i < (int)Math.random() * (7-3) + 3; i++){
+            domain = new Domain(N,M, i);
+        }
+
 
         // Print Access Matrix
         System.out.print(N + " domains\n" + M + " objects\nAccess Matrix:\n     ");
