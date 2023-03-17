@@ -62,7 +62,7 @@ public class Main {
 
         // Create domain threads
         for(int i = 0; i < 1; i++){
-            Domain domain = new Domain(N,M,i,AM);
+            Domain domain = new Domain(N,M,i,AM, object);
             Thread myThread = new Thread(domain);
             myThread.start();
         }
