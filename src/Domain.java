@@ -8,13 +8,15 @@ public class Domain implements Runnable {
     private static int N;
     private int threadNum;
     private static String[][] matrix;
+    private static String[] object;
     private String[]domainPermissions = new String[M+N];
 
-    public Domain(int objects, int domains, int thread, String[][] AM) {
+    public Domain(int objects, int domains, int thread, String[][] AM, String[] array) {
         M = objects;
         N = domains;
         this.threadNum = thread;
         matrix = AM;
+        object = array;
 
     }
 
