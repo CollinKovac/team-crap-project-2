@@ -2,14 +2,11 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static java.util.Calendar.AM;
-
 public class Main {
     // Create strings for objects
     static String[] object = {"May chaos take the world!", "A man cannot kill a god...", "Bear witness!",
             "Thy strength befits a crown.", "I command thee kneel!", "Together, we will devour the very gods!",
             "Sir Gideon Ofnir, the All-knowing!"};
-    public
 
     //creating the lock array for object accessing
     static Lock[] lock;
@@ -61,12 +58,13 @@ public class Main {
             for (int j = 0; j < M + N; j++)
                 System.out.print(AM[i][j] + "  ");
         }
+        System.out.println();
 
         // Create domain threads
-        Domain domain;
-        for(int i = 0; i < (int)(Math.random() * (7 - 3) + 3); i++){
-            domain = new Domain(N,M,i,AM, object);
-            domain.run();
+        for(int i = 0; i < 1; i++){
+            Domain domain = new Domain(N,M,i,AM);
+            Thread myThread = new Thread(domain);
+            myThread.start();
         }
     }
 
@@ -107,13 +105,13 @@ public class Main {
             if (i < M) System.out.print("\nF" + (i + 1) + ": " + AL.get(i));
             else System.out.print("\nD" + (i + 1 - M) + ": " + AL.get(i));
         }
+        System.out.println();
 
         // Create domain threads
-//        Domain domain;
-//        for(int i = 0; i < (int)(Math.random() * (7-3) + 3); i++){
-//            domain = new Domain(N,M,i,AM, object);
-//            domain = new Domain(N,M,i,AM, object);
-//        }
+        Domain domain;
+        for(int i = 0; i < (int)Math.random() * (7-3) + 3; i++){
+            //domain = new Domain(N,M,i,AL);
+        }
     }
 
     public static void main(String[] args) {
