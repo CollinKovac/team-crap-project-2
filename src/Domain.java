@@ -9,12 +9,15 @@ public class Domain implements Runnable {
     private static int N;
     private int threadNum;
     private static String[][] matrix;
+    private static String[] object;
+    private String[]domainPermissions = new String[M+N];
 
-    public Domain(int objects, int domains, int thread, String[][] AM) {
+    public Domain(int objects, int domains, int thread, String[][] AM, String[] array) {
         M = objects;
         N = domains;
         this.threadNum = thread;
         matrix = AM;
+        object = array;
 
     }
     //semaphore creation used for the readers and writers fucntions
@@ -23,7 +26,7 @@ public class Domain implements Runnable {
     static int readcount = 0;
 
     //reader function to run when accessible
-    private static void reader(int threadNum) throws InterruptedException {
+    private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
         mutex.acquire();
         readcount++;
         if(readcount == 1){
@@ -32,6 +35,7 @@ public class Domain implements Runnable {
         mutex.release();
 
         //read here
+        System.out.println("thread " +threadNum+ ": Resource" +resourceRequest+ " contains: " +object[resourceRequest]);
 
         mutex.acquire();
         readcount--;
@@ -41,11 +45,15 @@ public class Domain implements Runnable {
         mutex.release();
     }
 
+    static String[] writerObject = {"Chibaku Tensei","Kotoamatsukami","bijudama", "edo tensei" , "kamui", "Reaper Death Seal"};
+
     // writer function to run when accessible
-    private static void write(int threadNum) throws InterruptedException {
+    private static void writer(int threadNum, int resourceRequest) throws InterruptedException {
         area.acquire();
 
         //write here
+        object[resourceRequest] = writerObject[(int) (Math.random() * (6))];
+        System.out.println("thread" +threadNum+ ": writing " +object[resourceRequest]+ " to resource " +resourceRequest);
 
         area.release();
     }
@@ -72,21 +80,54 @@ public class Domain implements Runnable {
 
     @Override
     public void run() {
-        // Create array of this domain's current permissions
-        String[] domainPermissions = new String[M+N];
+        Random random = new Random();
+
         for (int i = 0; i < M+N; i++) {
             domainPermissions[i] = matrix[threadNum][i];
         }
 
-        // 5 requests
-        Random random = new Random();
-        for(int i = 0; i < 1; i++){
-            int request = random.nextInt(M+N);
-            while (request == threadNum + M) request = random.nextInt(M+N); // Don't generate self
-            if (request <= M-1)// If read/write
-                System.out.println("\nread/write");
-            else if (request < M+N) // If domain switch
-                switchDomain(threadNum, request, domainPermissions);
+
+        for(int i = 0; i < 5; i++){
+            int request = (int) (Math.random() * (M+N));
+            if (request <= M){
+                // procudes a number if 0 then it attempts to read and
+                // 1 attempts to write
+                int readNwrite = random.nextInt(1);
+                if(readNwrite == 0){
+                    System.out.println("thread " +this.threadNum+ ": attempting to read resource: " +matrix[0][request]);
+                    if(domainPermissions[request].contains("R")){
+                        // call the reader function
+                        try {
+                            reader(this.threadNum ,request);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    else{
+                        System.out.println("thread: " +this.threadNum+ ": operation failed, access denied");
+                    }
+                }
+                else if(readNwrite == 1){
+                    System.out.println("thread " +this.threadNum+ ": attempting to write to resource " +request);
+                    if(domainPermissions[request].contains("W")){
+                        try {
+                            writer(this.threadNum, request);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    else{
+                        System.out.println("thread: " +this.threadNum+ ": operation failed, access denied");
+                    }
+                }
+                else{
+                    //testing purposes
+                    System.out.println("OH NO SOMETHING WENT WRONGD!!!!!!!");
+                }
+            }
+            else {
+                switchDomain(threadNum , request , domainPermissions);
+            }
         }
     }
 }
