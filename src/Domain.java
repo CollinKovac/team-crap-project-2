@@ -10,6 +10,8 @@ public class Domain implements Runnable {
     private int threadNum;
     private static String[][] matrix;
     private static String[] object;
+    static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
+
 
     public Domain(int objects, int domains, int thread, String[][] AM, String[] array) {
         M = objects;
@@ -23,7 +25,7 @@ public class Domain implements Runnable {
     static Semaphore mutex = new Semaphore(1);
     static int readcount = 0;
 
-    private static Boolean arbitrator(String[] domainPermissions, int currentDomain, int targetDomain, String permission) {
+    private static Boolean arbitrator(String[] domainPermissions, int targetDomain, String permission) {
         return domainPermissions[targetDomain].contains(permission);
     }
 
@@ -47,7 +49,6 @@ public class Domain implements Runnable {
         mutex.release();
     }
 
-    static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
 
     // writer function to run when accessible
     private static void writer(int threadNum, int resourceRequest) throws InterruptedException {
@@ -63,8 +64,8 @@ public class Domain implements Runnable {
     //Domain switching method
     public static void switchDomain(int currentDomain, int targetDomain, String[] domainPermissions) {
         // Check if switching is allowed for the current domain and target domain
-        if (arbitrator(domainPermissions, currentDomain, M+targetDomain, "allowed")) {
-            //copying targeted domain permissions to current domain
+        if (arbitrator(domainPermissions, M+targetDomain, "allow")) {
+            // Copying targeted domain permissions to current domain
             for (int i = 0; i < M+N; i++)
                 domainPermissions[i] =  matrix[targetDomain][i];
             System.out.println("D" + currentDomain + ": Switched to D" + targetDomain);
@@ -92,7 +93,7 @@ public class Domain implements Runnable {
                 int readNwrite = random.nextInt(3);
                 if(readNwrite == 0) { // Read
                     System.out.println("D" + threadNum + ": Attempting to read F" + request);
-                    if(arbitrator(domainPermissions, threadNum, request, "R")) { // Check permission to read
+                    if(arbitrator(domainPermissions, request, "R")) { // Check permission to read
                         try {
                             reader(this.threadNum ,request);
                         } catch (InterruptedException e) {
@@ -102,7 +103,7 @@ public class Domain implements Runnable {
                 }
                 else if(readNwrite == 1) { // Write
                     System.out.println("D" +this.threadNum+ ": Attempting to write to F" + request);
-                    if(arbitrator(domainPermissions, threadNum, request, "W")) { // Check permission to write
+                    if(arbitrator(domainPermissions, request, "W")) { // Check permission to write
                         try {
                             writer(this.threadNum, request);
                         } catch (InterruptedException e) {
