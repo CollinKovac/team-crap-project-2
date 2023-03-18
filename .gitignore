@@ -3,7 +3,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .idea
-.CMPS-455-Project-2.iml
+CMPS-455-Project-2.iml
 
 ### Eclipse ###
 .apt_generated
