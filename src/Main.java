@@ -29,7 +29,6 @@ public class Main {
 
         // Create Access Matrix of size N*(M+N)
         String[][] AM = new String[N][M + N];
-        // Populate Access Matrix
         int RorW;
         int dSwitch;
         for (int i = 0; i < N; i++) {
@@ -50,11 +49,11 @@ public class Main {
         // Print Access Matrix
         System.out.print(N + " domains\n" + M + " objects\nAccess Matrix:\n     ");
         for (int i = 0; i < M + N; i++) {
-            if (i < M) System.out.print("F" + (i + 1) + "   ");
-            else System.out.print(" D" + (i + 1 - M) + "    ");
+            if (i < M) System.out.print("F" + i + "   ");
+            else System.out.print(" D" + (i - M) + "    ");
         }
         for (int i = 0; i < N; i++) {
-            System.out.print("\nD" + (i + 1) + "  ");
+            System.out.print("\nD" + i + "  ");
             for (int j = 0; j < M + N; j++)
                 System.out.print(AM[i][j] + "  ");
         }
@@ -62,7 +61,7 @@ public class Main {
 
         // Create domain threads
         for(int i = 0; i < 1; i++){
-            Domain domain = new Domain(N,M,i,AM, object);
+            Domain domain = new Domain(M,N,i,AM,object);
             Thread myThread = new Thread(domain);
             myThread.start();
         }
@@ -81,7 +80,6 @@ public class Main {
 
         // Create Access List (arraylist of linked lists for each object/domain)
         List<Object> AL = new ArrayList<>(0);
-        // Populate Access List
         int RorW;
         int dSwitch;
         for (int i = 0; i < M + N; i++) { // For each object/domain...
@@ -89,12 +87,12 @@ public class Main {
             for (int j = 0; j < N; j++) { // For each domain...
                 if (i < M) { // Object R/W access
                     RorW = random.nextInt(4);
-                    if (RorW == 0) list.add("D" + (j + 1) + ": R");
-                    else if (RorW == 1) list.add("D" + (j + 1) + ": W");
-                    else if (RorW == 2) list.add("D" + (j + 1) + ": R/W");
+                    if (RorW == 0) list.add("D" + j + ": R");
+                    else if (RorW == 1) list.add("D" + j + ": W");
+                    else if (RorW == 2) list.add("D" + j + ": R/W");
                 } else { // Domain switch access
                     dSwitch = random.nextInt(2);
-                    if (dSwitch == 0 && i - M != j) list.add("D" + (j + 1) + ": allow"); // Don't allow switching to self
+                    if (dSwitch == 0 && i - M != j) list.add("D" + j + ": allow"); // Don't allow switching to self
                 }
             }
             AL.add(list); // Add linked list to Access List
@@ -102,8 +100,8 @@ public class Main {
         // Print Access List
         System.out.print(N + " domains\n" + M + " objects\nAccess List:");
         for (int i = 0; i < M + N; i++) {
-            if (i < M) System.out.print("\nF" + (i + 1) + ": " + AL.get(i));
-            else System.out.print("\nD" + (i + 1 - M) + ": " + AL.get(i));
+            if (i < M) System.out.print("\nF" + i + ": " + AL.get(i));
+            else System.out.print("\nD" + (i - M) + ": " + AL.get(i));
         }
         System.out.println();
 
