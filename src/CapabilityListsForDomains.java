@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
@@ -42,7 +42,7 @@ public class CapabilityListsForDomains {
                         list.add("D" + (j) + ": R/W");
                     else{ // Domain switch access
                         domainSwitch = random.nextInt(2);
-                        if(domainSwitch == 0 && i - M != j)
+                        if(domainSwitch == 0 && i - M != j);
                     }
                 }
             }
@@ -103,4 +103,4 @@ public class CapabilityListsForDomains {
     * */
 
 
-}
+//}
