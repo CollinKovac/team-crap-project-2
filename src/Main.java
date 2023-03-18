@@ -60,7 +60,7 @@ public class Main {
         System.out.println();
 
         // Create domain threads
-        for(int i = 0; i < 1; i++){
+        for(int i = 0; i < N; i++){
             Domain domain = new Domain(M,N,i,AM,object);
             Thread myThread = new Thread(domain);
             myThread.start();
