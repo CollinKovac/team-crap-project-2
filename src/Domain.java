@@ -25,6 +25,10 @@ public class Domain implements Runnable {
     static Semaphore mutex = new Semaphore(1);
     static int readcount = 0;
 
+    private static Boolean arbitrator(int currentDomain, int targetDomain) {
+        return !matrix[currentDomain][targetDomain].contains("-");
+    }
+
     //reader function to run when accessible
     private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
         mutex.acquire();
@@ -59,22 +63,19 @@ public class Domain implements Runnable {
     }
 
     //Domain switching method
-    public static void switchDomain(int currentDomain, int targetDomain, String[] domainPermission) {
+    public static void switchDomain(int currentDomain, int targetDomain, String[] domainPermissions) {
         // Check if switching is allowed for the current domain and target domain
-        if (matrix[currentDomain][targetDomain].equals("allow")) {
-            //print out that a switch is a allowed
-            System.out.println("Switch permission is granted from D" + (currentDomain + 1) + " to D" + (targetDomain - M + 1));
-            System.out.println("D" + (currentDomain+1) + "has current permissions: " + Arrays.toString(domainPermission));
+        System.out.println("D" + currentDomain + ": Attempting to switch to D" + targetDomain);
+        if (arbitrator(currentDomain, M+targetDomain)) {
             //copying targeted domain permissions to current domain
             for (int i = 0; i < M+N; i++)
-                domainPermission[i] =  matrix[targetDomain - M][i];
-            System.out.println("D" + (currentDomain+1) + "now has permissions: " + Arrays.toString(domainPermission));
-        } else {
-            System.out.println("Switch permission is NOT granted");
-            int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
-            for (int j = 0; j < randInt; j++) {
-                Thread.yield();
-            }
+                domainPermissions[i] =  matrix[targetDomain][i];
+            System.out.println("D" + currentDomain + ": Switched to D" + targetDomain);
+        } else System.out.println("D" + currentDomain + ": Permission NOT granted to switch to D" + targetDomain);
+        int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
+        System.out.println("D" + currentDomain + ": Yielding " + randInt + " times");
+        for (int j = 0; j < randInt; j++) {
+            Thread.yield();
         }
     }
 
@@ -124,9 +125,11 @@ public class Domain implements Runnable {
                     //testing purposes
                     System.out.println("OH NO SOMETHING WENT WRONGD!!!!!!!");
                 }
-            }
-            else {
-                switchDomain(threadNum , request , domainPermissions);
+            } else { // If domain switch
+                while (M+N-request == threadNum) request = M + random.nextInt(N); // Don't generate self
+                System.out.println(request);
+                System.out.println("D" + threadNum + ": Request " + (i+1) + ": Switch to D" + (M+N-request));
+                switchDomain(threadNum, M+N-request, domainPermissions);
             }
         }
     }
