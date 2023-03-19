@@ -39,7 +39,7 @@ public class Domain implements Runnable {
         mutex.release();
 
         //read here
-        System.out.println("D" +threadNum+ ": F" +resourceRequest+ " contains: " +object[resourceRequest]);
+        System.out.println("D" +threadNum+ ": F" +resourceRequest+ " contains: ''" +object[resourceRequest] + "''");
 
         mutex.acquire();
         readcount--;
@@ -56,7 +56,7 @@ public class Domain implements Runnable {
 
         //write here
         object[resourceRequest] = writerObject[(int) (Math.random() * (6))];
-        System.out.println("D" +threadNum+ ": Writing " + object[resourceRequest]+ " to F" + resourceRequest);
+        System.out.println("D" +threadNum+ ": Writing ''" + object[resourceRequest]+ "'' to F" + resourceRequest);
 
         area.release();
     }
