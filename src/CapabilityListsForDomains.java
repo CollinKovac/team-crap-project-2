@@ -35,11 +35,11 @@ public class CapabilityListsForDomains {
                 if(j < M){ // each object does R | W | R/W - I'm unsure if this is correct
                     readOrWriter = random.nextInt(3);
                     if(readOrWriter == 0)
-                        list.add("D" + (j + ": R"));
+                        list.add("F" + (j + ": R"));
                     else if(readOrWriter == 1)
-                        list.add("D" + (j) + ": W");
+                        list.add("F" + (j) + ": W");
                     else if(readOrWriter == 2)
-                        list.add("D" + (j) + ": R/W");
+                        list.add("F" + (j) + ": R/W");
                     else{
                         System.out.println("Index out of bounds, line 44 in CL for domains");
                     }
@@ -47,17 +47,17 @@ public class CapabilityListsForDomains {
                 else{ // Domain switch access
                     domainSwitch = random.nextInt(2);
                     if(domainSwitch == 0 && i - M != j)
-                        list.add("D" + j + ": allow");
+                        list.add("D" + (j-M) + ": allow");
                 }
             }
             //add to each object as it goes down each domain
             capabilityLists.add(list);
         }
         // Print Capability List
-        System.out.print(N + " domains \n" + M + "objects\n Capability List:");
+        System.out.print(N + " domains \n" + M + " objects\nCapability List:");
         for (int i = 0; i < N; i++){
-            if(i < N)
-                System.out.print("\nD" + (i - M) + ": " + capabilityLists.get(i));
+            if(i < M)
+                System.out.print("\nD" + i + ": " + capabilityLists.get(i));
             else
                 System.out.print("\nF" + i + ": " + capabilityLists.get(i));
         }
