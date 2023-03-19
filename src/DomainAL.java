@@ -1,29 +1,30 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
 
-public class Domain implements Runnable {
+public class DomainAL implements Runnable {
 
     private static int M;
     private static int N;
     private int threadNum;
-    private static String[][] matrix;
-    static String[] object;
-    static Lock[] lock;
+    private static List<Object> list;
+    private static String[] object;
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
-    static Semaphore mutex;
-    static Semaphore area;
-    static int readcount;
 
-    public Domain(int objects, int domains, int thread, String[][] AM, String[] array, Semaphore mutex, Semaphore area, int readcount, Lock[] lock) {
+
+    public DomainAL(int objects, int domains, int thread, List<Object> AL, String[] array) {
         M = objects;
         N = domains;
         this.threadNum = thread;
-        matrix = AM;
+        list = AL;
         object = array;
     }
+    //semaphore creation used for the readers and writers fucntions
+    static Semaphore area = new Semaphore(1);
+    static Semaphore mutex = new Semaphore(1);
+    static int readcount = 0;
 
     private static Boolean arbitrator(String[] domainPermissions, int targetDomain, String permission) {
         return domainPermissions[targetDomain].contains(permission);
@@ -65,7 +66,7 @@ public class Domain implements Runnable {
     public static void switchDomain(int currentDomain, int targetDomain, String[] domainPermissions) {
         // Copying targeted domain permissions to current domain
         for (int i = 0; i < M+N; i++)
-            domainPermissions[i] =  matrix[targetDomain][i];
+            domainPermissions[i] =  list[targetDomain][i];
         System.out.println("D" + currentDomain + ": Switched to D" + targetDomain);
     }
 
@@ -76,7 +77,7 @@ public class Domain implements Runnable {
         // Make copy of current thread's permissions
         String[] domainPermissions = new String[M+N];
         for (int i = 0; i < M+N; i++) {
-            domainPermissions[i] = matrix[threadNum][i];
+            domainPermissions[i] = list[threadNum][i];
         }
         // Generate 5 requests
         for(int i = 0; i < 5; i++){
