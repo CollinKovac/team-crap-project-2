@@ -3,18 +3,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
 
 public class DomainAL implements Runnable {
 
     private static int M;
     private static int N;
     private int threadNum;
-    private static List<Object> list;
-    private static String[] object;
+    static List<Object> list;
+    static String[] object;
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
+    static Lock[] lock;
 
-
-    public DomainAL(int objects, int domains, int thread, List<Object> AL, String[] array) {
+    public DomainAL(int objects, int domains, int thread, ArrayList<Object> AL, String[] array, Lock[] lock) {
         M = objects;
         N = domains;
         this.threadNum = thread;
@@ -66,7 +67,7 @@ public class DomainAL implements Runnable {
     public static void switchDomain(int currentDomain, int targetDomain, String[] domainPermissions) {
         // Copying targeted domain permissions to current domain
         for (int i = 0; i < M+N; i++)
-            domainPermissions[i] =  list[targetDomain][i];
+            //domainPermissions[i] =  list[targetDomain][i];
         System.out.println("D" + currentDomain + ": Switched to D" + targetDomain);
     }
 
@@ -77,10 +78,11 @@ public class DomainAL implements Runnable {
         // Make copy of current thread's permissions
         String[] domainPermissions = new String[M+N];
         for (int i = 0; i < M+N; i++) {
-            domainPermissions[i] = list[threadNum][i];
+            //domainPermissions[i] = (String) list.get(threadNum);
+            System.out.println(list.get(threadNum));
         }
         // Generate 5 requests
-        for(int i = 0; i < 5; i++){
+        /*for(int i = 0; i < 5; i++){
             int request = random.nextInt(M+N-1)+1;
             if (request <= M){ // Read or Write
                 int readNwrite = random.nextInt(3);
@@ -120,6 +122,6 @@ public class DomainAL implements Runnable {
                 //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
                 for (int j = 0; j < randInt; j++) Thread.yield();
             }
-        }
+        }*/
     }
 }

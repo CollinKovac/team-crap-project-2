@@ -74,7 +74,7 @@ public class Main {
         int M = 3 + random.nextInt(5);
 
         // Create Access List (arraylist of linked lists for each object/domain)
-        List<Object> AL = new ArrayList<>(0);
+        ArrayList<Object> AL = new ArrayList<>(0);
         int RorW;
         int dSwitch;
         for (int i = 0; i < M + N; i++) { // For each object/domain...
@@ -109,21 +109,22 @@ public class Main {
         Semaphore mutex = new Semaphore(1);
         int readcount = 0;
 
-        Domain.object = object;
-        Domain.lock = lock;
-        Domain.area = area;
-        Domain.mutex = mutex;
-        Domain.readcount = readcount;
+        DomainAL.object = object;
+        DomainAL.lock = lock;
+        DomainAL.area = area;
+        DomainAL.mutex = mutex;
+        DomainAL.readcount = readcount;
 
         // Create domain threads
-        DomainAL domain;
-        for(int i = 0; i < N; i++){
-            domain = new DomainAL(N,M,i,AL,object);
+        for(int i = 0; i < 1; i++){
+            DomainAL domain = new DomainAL(N,M,i,AL,object,lock);
+            Thread myThread = new Thread(domain);
+            myThread.start();
         }
     }
 
     public static void main(String[] args) {
-        AccessMatrix();
-        //AccessList();
+        //AccessMatrix();
+        AccessList();
     }
 }
