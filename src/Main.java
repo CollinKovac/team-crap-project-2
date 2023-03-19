@@ -1,31 +1,15 @@
 import java.util.*;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
-    // Create strings for objects
-    static String[] object = {"May chaos take the world!", "A man cannot kill a god...", "Bear witness!",
-            "Thy strength befits a crown.", "I command thee kneel!", "Together, we will devour the very gods!",
-            "Sir Gideon Ofnir, the All-knowing!"};
-
-    //creating the lock array for object accessing
-    static Lock[] lock;
-
-    public static void lockMaker(int M) {
-        lock = new Lock[M];
-        for (int i = 0; i < M; i++) lock[i] = new ReentrantLock();
-    }
-
     public static void AccessMatrix() {
         // Get number of domains N
         Random random = new Random();
         int N = 3 + random.nextInt(5);
         // Get number of objects M
         int M = 3 + random.nextInt(5);
-
-        // calling the lockmaker function to create the lock
-        // array and initialize all permits to 1.
-        lockMaker(M);
 
         // Create Access Matrix of size N*(M+N)
         String[][] AM = new String[N][M + N];
@@ -59,9 +43,24 @@ public class Main {
         }
         System.out.println();
 
+        String[] object = {"May chaos take the world!", "A man cannot kill a god...", "Bear witness!",
+                "Thy strength befits a crown.", "I command thee kneel!", "Together, we will devour the very gods!",
+                "Sir Gideon Ofnir, the All-knowing!"};
+        Lock[] lock = new Lock[M];
+        for (int i = 0; i < M; i++) lock[i] = new ReentrantLock();
+        Semaphore area = new Semaphore(1);
+        Semaphore mutex = new Semaphore(1);
+        int readcount = 0;
+
+        Domain.object = object;
+        Domain.lock = lock;
+        Domain.area = area;
+        Domain.mutex = mutex;
+        Domain.readcount = readcount;
+
         // Create domain threads
         for(int i = 0; i < N; i++){
-            Domain domain = new Domain(M,N,i,AM,object);
+            Domain domain = new Domain(M,N,i,AM,object,area,mutex,readcount,lock);
             Thread myThread = new Thread(domain);
             myThread.start();
         }
@@ -73,10 +72,6 @@ public class Main {
         int N = 3 + random.nextInt(5);
         // Get number of objects M
         int M = 3 + random.nextInt(5);
-
-        // calling the lockmaker function to create the lock
-        // array and initialize all permits to 1.
-        lockMaker(M);
 
         // Create Access List (arraylist of linked lists for each object/domain)
         List<Object> AL = new ArrayList<>(0);
@@ -105,10 +100,25 @@ public class Main {
         }
         System.out.println();
 
+        String[] object = {"May chaos take the world!", "A man cannot kill a god...", "Bear witness!",
+                "Thy strength befits a crown.", "I command thee kneel!", "Together, we will devour the very gods!",
+                "Sir Gideon Ofnir, the All-knowing!"};
+        Lock[] lock = new Lock[M];
+        for (int i = 0; i < M; i++) lock[i] = new ReentrantLock();
+        Semaphore area = new Semaphore(1);
+        Semaphore mutex = new Semaphore(1);
+        int readcount = 0;
+
+        Domain.object = object;
+        Domain.lock = lock;
+        Domain.area = area;
+        Domain.mutex = mutex;
+        Domain.readcount = readcount;
+
         // Create domain threads
-        Domain domain;
-        for(int i = 0; i < (int)Math.random() * (7-3) + 3; i++){
-            //domain = new Domain(N,M,i,AL);
+        DomainAL domain;
+        for(int i = 0; i < N; i++){
+            domain = new DomainAL(N,M,i,AL,object);
         }
     }
 
