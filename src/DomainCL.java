@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 
@@ -9,12 +6,13 @@ public class DomainCL implements Runnable{
     private static int M;
     private static int N;
     private int threadNum;
-    static List<Object> list;
+    //static List<Object> list;
+    static ArrayList<LinkedList> list;
     static String[] object;
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
     static Lock[] lock;
 
-    public DomainCL(int objects, int domains, int thread, ArrayList<Object> AL, String[] array, Lock[] lock) {
+    public DomainCL(int objects, int domains, int thread, ArrayList<LinkedList> AL, String[] array, Lock[] lock) {
         M = objects;
         N = domains;
         this.threadNum = thread;
@@ -26,6 +24,51 @@ public class DomainCL implements Runnable{
     static Semaphore area = new Semaphore(1);
     static Semaphore mutex = new Semaphore(1);
     static int readcount = 0;
+
+
+    private static Boolean arbitrator(String[] domainPermissions, int targetDomain, String permission) {
+        return domainPermissions[targetDomain].contains(permission);
+    }
+
+    //reader function to run when accessible
+    private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
+        mutex.acquire();
+        readcount++;
+        if(readcount == 1){
+            area.acquire();
+        }
+        mutex.release();
+
+        //read here
+        System.out.println("D" +threadNum+ ": F" +resourceRequest+ " contains: " +object[resourceRequest]);
+
+        mutex.acquire();
+        readcount--;
+        if(readcount == 0){
+            area.release();
+        }
+        mutex.release();
+    }
+
+
+    // writer function to run when accessible
+    private static void writer(int threadNum, int resourceRequest) throws InterruptedException {
+        area.acquire();
+
+        //write here
+        object[resourceRequest] = writerObject[(int) (Math.random() * (6))];
+        System.out.println("D" +threadNum+ ": Writing " + object[resourceRequest]+ " to F" + resourceRequest);
+
+        area.release();
+    }
+
+    //Domain switching method
+    public static void switchDomain(int currentDomain, int targetDomain, String[] domainPermissions) {
+        // Copying targeted domain permissions to current domain
+        for (int i = 0; i < M+N; i++)
+            //domainPermissions[i] =  list[targetDomain][i];
+            System.out.println("D" + currentDomain + ": Switched to D" + targetDomain);
+    }
 
     @Override
     public void run() {
