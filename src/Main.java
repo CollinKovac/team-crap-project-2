@@ -74,7 +74,7 @@ public class Main {
         int M = 3 + random.nextInt(5);
 
         // Create Access List (arraylist of linked lists for each object/domain)
-        ArrayList<Object> AL = new ArrayList<>(0);
+        ArrayList<LinkedList<String>> AL = new ArrayList<>(0);
         int RorW;
         int dSwitch;
         for (int i = 0; i < M + N; i++) { // For each object/domain...
@@ -124,7 +124,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        //AccessMatrix();
-        AccessList();
+        AccessMatrix();
+        //AccessList();
     }
 }
