@@ -24,9 +24,11 @@ public class DomainAL implements Runnable {
     static Semaphore mutex = new Semaphore(1);
     static int readcount = 0;
 
-    private static Boolean arbitrator(LinkedList<String> domainPermissions, int targetDomain, String permission, String object) {
-        for (String item : domainPermissions) { // Find matching object and permission
-            if (item.contains(permission) && item.contains(object)) return true;
+    private static Boolean arbitrator(int targetObject, String permission, String domain) {
+        LinkedList<String> targetDomainPermissions = new LinkedList<String>();
+        targetDomainPermissions = (LinkedList<String>) list.get(targetObject).clone();
+        for (String item : targetDomainPermissions) { // Find matching object and permission
+            if (item.contains(domain + ": " + permission)) return true;
         }
         return false;
     }
@@ -85,7 +87,7 @@ public class DomainAL implements Runnable {
                 int readNwrite = random.nextInt(3);
                 if(readNwrite == 0) { // Read
                     System.out.println("D" + threadNum + ": Attempting to read F" + (request-1));
-                    if(arbitrator(domainPermissions, request-1, "R", ("F" + (request-1)))) { // Check permission to read
+                    if(arbitrator(request-1, "R", ("D" + threadNum))) { // Check permission to read
                         try {
                             reader(this.threadNum ,request-1);
                         } catch (InterruptedException e) {
@@ -98,7 +100,7 @@ public class DomainAL implements Runnable {
                 }
                 else { // Write
                     System.out.println("D" +this.threadNum+ ": Attempting to write to F" + (request-1));
-                    if(arbitrator(domainPermissions, request-1, "W", ("F" + (request-1)))) { // Check permission to write
+                    if(arbitrator(request-1, "W", ("D" + threadNum))) { // Check permission to write
                         try {
                             writer(this.threadNum, request-1);
                         } catch (InterruptedException e) {
@@ -112,7 +114,7 @@ public class DomainAL implements Runnable {
             } else { // Domain Switch
                 while (M+N-request == threadNum) request = random.nextInt(N-1)+M+1; // Don't generate self
                 System.out.println("D" + threadNum + ": Attempting to switch to D" + (M+N-request));
-                if (arbitrator(domainPermissions, M+M+N-request, "allow", ("D" + (request)))) // Check permission to switch
+                if (arbitrator(request-1, "allow", ("D" + threadNum))) // Check permission to switch
                     switchDomain(threadNum, M+N-request, domainPermissions);
                 else System.out.println("D" + threadNum + ": Permission NOT granted to switch to D" + (M+N-request));
                 int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
