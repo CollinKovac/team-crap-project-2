@@ -124,7 +124,7 @@ public class Main {
     }
 
 
-    public static void capabilityList(){
+    public static void CapabilityList(){
         // Get number of domains N
         Random random = new Random();
         int N = 3 + random.nextInt(5);
@@ -132,7 +132,7 @@ public class Main {
         int M = 3 + random.nextInt(5);
 
         // Create Capability List
-        ArrayList capabilityLists = new ArrayList<>(0);
+        ArrayList<LinkedList<String>> capabilityLists = new ArrayList<>(0);
         int readOrWriter;
         int domainSwitch;
         // N = for domains
@@ -190,7 +190,7 @@ public class Main {
 
         // Create domain threads
         for(int i = 0; i < 1; i++){
-            DomainAL domain = new DomainAL(N,M,i,capabilityLists,object,lock);
+            DomainCL domain = new DomainCL(M,N,i,capabilityLists,object,lock);
             Thread myThread = new Thread(domain);
             myThread.start();
         }
@@ -199,5 +199,6 @@ public class Main {
     public static void main(String[] args) {
         //AccessMatrix();
         AccessList();
+        CapabilityList();
     }
 }
