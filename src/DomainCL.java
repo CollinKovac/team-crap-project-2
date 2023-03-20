@@ -6,13 +6,12 @@ public class DomainCL implements Runnable{
     private static int M;
     private static int N;
     private int threadNum;
-    //static List<Object> list;
-    static ArrayList<LinkedList> list;
+    static ArrayList<LinkedList<String>> list;
     static String[] object;
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
     static Lock[] lock;
 
-    public DomainCL(int objects, int domains, int thread, ArrayList<LinkedList> AL, String[] array, Lock[] lock) {
+    public DomainCL(int objects, int domains, int thread, ArrayList<LinkedList<String>> AL, String[] array, Lock[] lock) {
         M = objects;
         N = domains;
         this.threadNum = thread;
