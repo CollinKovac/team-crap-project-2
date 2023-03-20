@@ -49,7 +49,6 @@ public class Domain implements Runnable {
         mutex.release();
     }
 
-
     // writer function to run when accessible
     private static void writer(int threadNum, int resourceRequest) throws InterruptedException {
         area.acquire();
@@ -86,27 +85,19 @@ public class Domain implements Runnable {
                 if(readNwrite == 0) { // Read
                     System.out.println("D" + threadNum + ": Attempting to read F" + (request-1));
                     if(arbitrator(domainPermissions, request-1, "R")) { // Check permission to read
-                        try {
-                            reader(this.threadNum ,request-1);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                        try {reader(this.threadNum ,request-1);} catch (InterruptedException e) {throw new RuntimeException(e);}
                     } else System.out.println("D" +this.threadNum+ ": Permission NOT granted to read F" + (request-1));
                     int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
-                    //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
+                    System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
                     for (int j = 0; j < randInt; j++) Thread.yield();
                 }
                 else { // Write
                     System.out.println("D" +this.threadNum+ ": Attempting to write to F" + (request-1));
                     if(arbitrator(domainPermissions, request-1, "W")) { // Check permission to write
-                        try {
-                            writer(this.threadNum, request-1);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                        try {writer(this.threadNum, request-1);} catch (InterruptedException e) {throw new RuntimeException(e);}
                     } else System.out.println("D" +this.threadNum+ ": Permission NOT granted to write to F" + (request-1));
                     int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
-                    //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
+                    System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
                     for (int j = 0; j < randInt; j++) Thread.yield();
                 }
             } else { // Domain Switch
@@ -116,7 +107,7 @@ public class Domain implements Runnable {
                     switchDomain(threadNum, M+N-request, domainPermissions);
                 else System.out.println("D" + threadNum + ": Permission NOT granted to switch to D" + (M+N-request));
                 int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
-                //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
+                System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
                 for (int j = 0; j < randInt; j++) Thread.yield();
             }
         }

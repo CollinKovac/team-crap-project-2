@@ -117,14 +117,14 @@ public class Main {
 
         // Create domain threads
         for(int i = 0; i < 1; i++){
-            DomainAL domain = new DomainAL(N,M,i,AL,object,lock);
+            DomainAL domain = new DomainAL(M,N,i,AL,object,lock);
             Thread myThread = new Thread(domain);
             myThread.start();
         }
     }
 
     public static void main(String[] args) {
-        AccessMatrix();
-        //AccessList();
+        //AccessMatrix();
+        AccessList();
     }
 }
