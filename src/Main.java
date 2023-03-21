@@ -197,8 +197,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        //AccessMatrix();
-        AccessList();
-        CapabilityList();
+        AccessMatrix();
+        //AccessList();
+        //CapabilityList();
     }
 }
