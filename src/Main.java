@@ -48,19 +48,21 @@ public class Main {
                 "Sir Gideon Ofnir, the All-knowing!"};
         Lock[] lock = new Lock[M];
         for (int i = 0; i < M; i++) lock[i] = new ReentrantLock();
-        Semaphore area = new Semaphore(1);
-        Semaphore mutex = new Semaphore(1);
-        int readcount = 0;
+        Lock[] area = new Lock[object.length];
+        Lock[] mutex = new Lock[object.length];
+        int[] readcount = new int[object.length];
+        for(int i = 0; i < readcount.length; i++){
+            readcount[i] = 0;
+        }
 
         Domain.object = object;
-        Domain.lock = lock;
         Domain.area = area;
         Domain.mutex = mutex;
         Domain.readcount = readcount;
 
         // Create domain threads
         for(int i = 0; i < N; i++){
-            Domain domain = new Domain(M,N,i,AM,object,area,mutex,readcount,lock);
+            Domain domain = new Domain(M,N,i,AM,object,mutex,area,readcount);
             Thread myThread = new Thread(domain);
             myThread.start();
         }
@@ -103,21 +105,23 @@ public class Main {
         String[] object = {"May chaos take the world!", "A man cannot kill a god...", "Bear witness!",
                 "Thy strength befits a crown.", "I command thee kneel!", "Together, we will devour the very gods!",
                 "Sir Gideon Ofnir, the All-knowing!"};
-        Lock[] lock = new Lock[M];
-        for (int i = 0; i < M; i++) lock[i] = new ReentrantLock();
-        Semaphore area = new Semaphore(1);
-        Semaphore mutex = new Semaphore(1);
-        int readcount = 0;
+        Lock[] area = new Lock[object.length];
+        Lock[] mutex = new Lock[object.length];
+        int[] readcount = new int[object.length];
+        for (int i = 0; i < M; i++) {
+            area[i] = new ReentrantLock();
+            mutex[i] = new ReentrantLock();
+            readcount[i] = 0;
+        }
 
         DomainAL.object = object;
-        DomainAL.lock = lock;
         DomainAL.area = area;
         DomainAL.mutex = mutex;
         DomainAL.readcount = readcount;
 
         // Create domain threads
         for(int i = 0; i < 1; i++){
-            DomainAL domain = new DomainAL(M,N,i,AL,object,lock);
+            DomainAL domain = new DomainAL(M,N,i,AL,object,mutex,area,readcount);
             Thread myThread = new Thread(domain);
             myThread.start();
         }
@@ -176,21 +180,23 @@ public class Main {
         String[] object = {"May chaos take the world!", "A man cannot kill a god...", "Bear witness!",
                 "Thy strength befits a crown.", "I command thee kneel!", "Together, we will devour the very gods!",
                 "Sir Gideon Ofnir, the All-knowing!"};
-        Lock[] lock = new Lock[N];
-        for (int i = 0; i < N; i++) lock[i] = new ReentrantLock();
-        Semaphore area = new Semaphore(1);
-        Semaphore mutex = new Semaphore(1);
-        int readcount = 0;
+        Lock[] area = new Lock[object.length];
+        Lock[] mutex = new Lock[object.length];
+        int[] readcount = new int[object.length];
+        for (int i = 0; i < M; i++) {
+            area[i] = new ReentrantLock();
+            mutex[i] = new ReentrantLock();
+            readcount[i] = 0;
+        }
 
-        DomainCL.object = object;
-        DomainCL.lock = lock;
-        DomainCL.area = area;
-        DomainCL.mutex = mutex;
-        DomainCL.readcount = readcount;
+        DomainAL.object = object;
+        DomainAL.area = area;
+        DomainAL.mutex = mutex;
+        DomainAL.readcount = readcount;
 
         // Create domain threads
         for(int i = 0; i < 1; i++){
-            DomainCL domain = new DomainCL(M,N,i,capabilityLists,object,lock);
+            DomainCL domain = new DomainCL(M,N,i,capabilityLists,object,mutex,area,readcount);
             Thread myThread = new Thread(domain);
             myThread.start();
         }
