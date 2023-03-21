@@ -11,6 +11,44 @@ public class CapabilityListsForDomains {
         for (int i = 0; i < M; i++) lock[i] = new ReentrantLock();
     }
 
+    static String[] object;
+    static Lock area;
+    static Lock mutex;
+    static int readcount = 0;
+    static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
+
+    //reader function to run when accessible
+    private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
+        mutex.lock();
+        readcount++;
+        if(readcount == 1){
+            area.lock();
+        }
+        mutex.unlock();
+
+        //read here
+        System.out.println("D" +threadNum+ ": F" +resourceRequest+ " contains: " +object[resourceRequest]);
+
+        mutex.lock();
+        readcount--;
+        if(readcount == 0){
+            area.unlock();
+        }
+        mutex.unlock();
+    }
+
+
+    // writer function to run when accessible
+    private static void writer(int threadNum, int resourceRequest) throws InterruptedException {
+        area.lock();
+
+        //write here
+        object[resourceRequest] = writerObject[(int) (Math.random() * (6))];
+        System.out.println("D" +threadNum+ ": Writing " + object[resourceRequest]+ " to F" + resourceRequest);
+
+        area.unlock();
+    }
+
     public static void capabilityListForDomains(){
         // Get number of domains N
         Random random = new Random();
