@@ -19,8 +19,8 @@ public class DomainAL implements Runnable {
         object = array;
     }
     //semaphore creation used for the readers and writers fucntions
-    static Semaphore area = new Semaphore(1);
-    static Semaphore mutex = new Semaphore(1);
+    static Lock area;
+    static Lock mutex;
     static int readcount = 0;
 
     private static Boolean arbitrator(int targetObject, String permission) {
@@ -29,12 +29,12 @@ public class DomainAL implements Runnable {
 
     //reader function to run when accessible
     private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
-        mutex.acquire();
+        mutex.lock();
         readcount++;
         if(readcount == 1){
-            area.acquire();
+            area.lock();
         }
-        mutex.release();
+        mutex.unlock();
 
         //read here
         System.out.println("D" +threadNum+ ": F" +resourceRequest+ " contains: ''" +object[resourceRequest] + "''");
@@ -43,17 +43,17 @@ public class DomainAL implements Runnable {
         //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
         for (int j = 0; j < randInt; j++) Thread.yield();
 
-        mutex.acquire();
+        mutex.lock();
         readcount--;
         if(readcount == 0){
-            area.release();
+            area.unlock();
         }
-        mutex.release();
+        mutex.unlock();
     }
 
     // writer function to run when accessible
     private static void writer(int threadNum, int resourceRequest) throws InterruptedException {
-        area.acquire();
+        area.lock();
 
         //write here
         object[resourceRequest] = writerObject[(int) (Math.random() * (6))];
@@ -63,7 +63,7 @@ public class DomainAL implements Runnable {
         //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
         for (int j = 0; j < randInt; j++) Thread.yield();
 
-        area.release();
+        area.unlock();
     }
 
     //Domain switching method
