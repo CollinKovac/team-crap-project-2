@@ -56,7 +56,7 @@ public class CapabilityListsForDomains {
         // Print Capability List
         System.out.print(N + " domains \n" + M + " objects\nCapability List:");
         for (int i = 0; i < N; i++){
-            if(i < M)
+            if(i <= N)
                 System.out.print("\nD" + i + ": " + capabilityLists.get(i));
             else
                 System.out.print("\nF" + i + ": " + capabilityLists.get(i));
