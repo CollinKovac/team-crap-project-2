@@ -13,8 +13,8 @@ public class Domain implements Runnable {
     static String[] object;
     static Lock[] lock;
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
-    static Semaphore mutex;
-    static Semaphore area;
+    static Lock mutex;
+    static Lock area;
     static int readcount;
 
     public Domain(int objects, int domains, int thread, String[][] AM, String[] array, Semaphore mutex, Semaphore area, int readcount, Lock[] lock) {
@@ -31,34 +31,34 @@ public class Domain implements Runnable {
 
     //reader function to run when accessible
     private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
-        mutex.acquire();
+        mutex.lock();
         readcount++;
         if(readcount == 1){
-            area.acquire();
+            area.lock();
         }
-        mutex.release();
+        mutex.unlock();
 
         //read here
         System.out.println("D" +threadNum+ ": F" +resourceRequest+ " contains: " +object[resourceRequest]);
 
-        mutex.acquire();
+        mutex.lock();
         readcount--;
         if(readcount == 0){
-            area.release();
+            area.unlock();
         }
-        mutex.release();
+        mutex.unlock();
     }
 
 
     // writer function to run when accessible
     private static void writer(int threadNum, int resourceRequest) throws InterruptedException {
-        area.acquire();
+        area.lock();
 
         //write here
         object[resourceRequest] = writerObject[(int) (Math.random() * (6))];
         System.out.println("D" +threadNum+ ": Writing " + object[resourceRequest]+ " to F" + resourceRequest);
 
-        area.release();
+        area.unlock();
     }
 
     //Domain switching method
