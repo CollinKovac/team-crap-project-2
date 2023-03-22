@@ -5,17 +5,17 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 
 public class Domain implements Runnable {
-    private static int M;
-    private static int N;
+    static int M;
+    static int N;
     private int threadNum;
-    private static String[][] matrix;
+    static String[][] matrix;
     static String[] object;
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
-    static Lock[] mutex;
-    static Lock[] area;
+    static Semaphore[] mutex;
+    static Semaphore[] area;
     static int[] readcount;
 
-    public Domain(int objects, int domains, int thread, String[][] AM, String[] array, Lock[] mutex, Lock[] area, int[] readcount) {
+    public Domain(int objects, int domains, int thread, String[][] AM, String[] array, Semaphore[] mutex, Semaphore[] area, int[] readcount) {
         this.threadNum = thread;
     }
 
@@ -25,36 +25,36 @@ public class Domain implements Runnable {
 
     //reader function to run when accessible
     private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
-        mutex[resourceRequest].lock();
+        mutex[resourceRequest].acquire();
         readcount[resourceRequest]++;
         if(readcount[resourceRequest] == 1){
-            area[resourceRequest].lock();
+            area[resourceRequest].acquire();
         }
-        mutex[resourceRequest].unlock();
+        mutex[resourceRequest].release();
 
         //read here
         System.out.println("D" +threadNum+ ": F" +resourceRequest+ " contains: ''" +object[resourceRequest] + "''");
 
-        mutex[resourceRequest].lock();
+        mutex[resourceRequest].acquire();
         readcount[resourceRequest]--;
         if(readcount[resourceRequest] == 0){
-            area[resourceRequest].unlock();
+            area[resourceRequest].release();
         int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
         System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
         for (int j = 0; j < randInt; j++) Thread.yield();
         }
-        mutex[resourceRequest].unlock();
+        mutex[resourceRequest].release();
     }
 
     // writer function to run when accessible
     private static void writer(int threadNum, int resourceRequest) throws InterruptedException {
-        area[resourceRequest].lock();
+        area[resourceRequest].acquire();
 
         //write here
         object[resourceRequest] = writerObject[(int) (Math.random() * (6))];
         System.out.println("D" +threadNum+ ": Writing ''" + object[resourceRequest]+ "'' to F" + resourceRequest);
 
-        area[resourceRequest].unlock();
+        area[resourceRequest].release();
 
         int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
         System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
@@ -81,8 +81,8 @@ public class Domain implements Runnable {
         }
         // Generate 5 requests
         for(int i = 0; i < 5; i++){
-            int request = random.nextInt(M+N);
-            if (request < M){ // Read or Write
+            int request = random.nextInt(M+N-1)+1;
+            if (request <= M){ // Read or Write
                 int readNwrite = random.nextInt(3);
                 if(readNwrite == 0) { // Read
                     System.out.println("D" + threadNum + ": Attempting to read F" + request);

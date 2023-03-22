@@ -46,15 +46,18 @@ public class Main {
         String[] object = {"May chaos take the world!", "A man cannot kill a god...", "Bear witness!",
                 "Thy strength befits a crown.", "I command thee kneel!", "Together, we will devour the very gods!",
                 "Sir Gideon Ofnir, the All-knowing!"};
-        Lock[] lock = new Lock[M];
-        for (int i = 0; i < M; i++) lock[i] = new ReentrantLock();
-        Lock[] area = new Lock[object.length];
-        Lock[] mutex = new Lock[object.length];
+        Semaphore[] area = new Semaphore[object.length];
+        Semaphore[] mutex = new Semaphore[object.length];
         int[] readcount = new int[object.length];
-        for(int i = 0; i < readcount.length; i++){
+        for (int i = 0; i < M; i++) {
+            area[i] = new Semaphore(1);
+            mutex[i] = new Semaphore(1);
             readcount[i] = 0;
         }
 
+        Domain.M = M;
+        Domain.N = N;
+        Domain.matrix = AM;
         Domain.object = object;
         Domain.area = area;
         Domain.mutex = mutex;
