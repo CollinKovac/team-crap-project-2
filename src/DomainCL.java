@@ -77,7 +77,7 @@ public class DomainCL implements Runnable {
                 int readNwrite = random.nextInt(3);
                 if(readNwrite == 0) { // Read
                     System.out.println("D" + threadNum + ": Attempting to read F" + request);
-                    if(arbitrator(request, ("D" + threadPerms + ": R")) || arbitrator(request, ("D" + threadPerms + ": R/W"))) { // Check permission to read
+                    if(arbitrator(threadPerms, ("F" + request + ": R")) || arbitrator(request, ("F" + request + ": R/W"))) { // Check permission to read
                         try {reader(threadNum ,request);} catch (InterruptedException e) {throw new RuntimeException(e);}
                     } else {
                         System.out.println("D" + threadNum + ": Permission NOT granted to read F" + request);
@@ -87,7 +87,7 @@ public class DomainCL implements Runnable {
                     }
                 } else { // Write
                     System.out.println("D" + threadNum + ": Attempting to write to F" + request);
-                    if(arbitrator(request, ("D" + threadPerms + ": W")) || arbitrator(request, ("D" + threadPerms + ": R/W"))) { // Check permission to write
+                    if(arbitrator(threadPerms, ("F" + request + ": W")) || arbitrator(request, ("F" + request + ": R/W"))) { // Check permission to write
                         try {writer(threadNum, request);} catch (InterruptedException e) {throw new RuntimeException(e);}
                     } else {
                         System.out.println("D" + threadNum + ": Permission NOT granted to write to F" + request);
@@ -99,7 +99,7 @@ public class DomainCL implements Runnable {
             } else { // Domain Switch
                 while (request-M == threadNum || request < M || request >= M+N) request = random.nextInt(N)+M; // Don't generate self
                 System.out.println("D" + threadNum + ": Attempting to switch to D" + (request-M));
-                if (arbitrator(request, ("D" + threadPerms + ": allow"))) { // Check permission to switch
+                if (arbitrator(threadPerms, ("D" + (request-M) + ": allow"))) { // Check permission to switch
                     threadPerms = request-M; // Acquire permission name of domain just switched to
                     System.out.println("D" + threadNum + ": Switched to D" + (request-M));
                 } else System.out.println("D" + threadNum + ": Permission NOT granted to switch to D" + (request-M));
