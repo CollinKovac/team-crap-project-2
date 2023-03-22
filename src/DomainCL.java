@@ -10,8 +10,8 @@ public class DomainCL implements Runnable {
     static ArrayList<LinkedList<String>> list;
     static String[] object;
     //semaphore creation used for the readers and writers fucntions
-    static Semaphore[] area;
-    static Semaphore[] mutex;
+    static Lock[] area;
+    static Lock[] mutex;
     static int[] readcount;
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
 
@@ -30,12 +30,12 @@ public class DomainCL implements Runnable {
 
     //reader function to run when accessible
     private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
-        mutex[resourceRequest].acquire();
+        mutex[resourceRequest].lock();
         readcount[resourceRequest]++;
         if(readcount[resourceRequest] == 1){
-            area[resourceRequest].acquire();
+            area[resourceRequest].lock();
         }
-        mutex[resourceRequest].release();
+        mutex[resourceRequest].unlock();
 
         //read here
         System.out.println("D" +threadNum+ ": F" +resourceRequest+ " contains: ''" +object[resourceRequest] + "''");
@@ -44,17 +44,17 @@ public class DomainCL implements Runnable {
         //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
         for (int j = 0; j < randInt; j++) Thread.yield();
 
-        mutex[resourceRequest].acquire();
+        mutex[resourceRequest].lock();
         readcount[resourceRequest]--;
         if(readcount[resourceRequest] == 0){
-            area[resourceRequest].release();
+            area[resourceRequest].unlock();
         }
-        mutex[resourceRequest].release();
+        mutex[resourceRequest].unlock();
     }
 
     // writer function to run when accessible
     private static void writer(int threadNum, int resourceRequest) throws InterruptedException {
-        area[resourceRequest].acquire();
+        area[resourceRequest].lock();
 
         //write here
         object[resourceRequest] = writerObject[(int) (Math.random() * (6))];
@@ -64,7 +64,7 @@ public class DomainCL implements Runnable {
         //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
         for (int j = 0; j < randInt; j++) Thread.yield();
 
-        area[resourceRequest].release();
+        area[resourceRequest].unlock();
     }
 
     @Override

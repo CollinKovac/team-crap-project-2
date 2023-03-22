@@ -163,8 +163,8 @@ public class Main {
                 }
                 else{ // Domain switch access
                     domainSwitch = random.nextInt(2);
-                    if(domainSwitch == 0 && i - M != j)
-                        list.add("D" + (j-M) + ": allow");
+                    if(domainSwitch == 0 && (j - M) != i)
+                        list.add("D" + (j - M) + ": allow");
                 }
             }
             //add to each object as it goes down each domain
@@ -199,7 +199,7 @@ public class Main {
         DomainAL.readcount = readcount;
 
         // Create domain threads
-        for(int i = 0; i < 1; i++){
+        for(int i = 0; i < N; i++){
             DomainCL domain = new DomainCL(M,N,i,capabilityLists,object,mutex,area,readcount);
             Thread myThread = new Thread(domain);
             myThread.start();
