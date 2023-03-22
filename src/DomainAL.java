@@ -9,19 +9,14 @@ public class DomainAL implements Runnable {
     static ArrayList<LinkedList<String>> list;
     static String[] object;
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
-    static Lock[] lock;
 
-    public DomainAL(int objects, int domains, int thread, ArrayList<LinkedList<String>> AL, String[] array, Lock[] lock) {
-        M = objects;
-        N = domains;
+    public DomainAL(int objects, int domains, int thread, ArrayList<LinkedList<String>> AL, String[] array, Lock[] mutex, Lock[] area, int[] readcount) {
         this.threadNum = thread;
-        list = AL;
-        object = array;
     }
     //semaphore creation used for the readers and writers fucntions
-    static Lock area;
-    static Lock mutex;
-    static int readcount = 0;
+    static Lock[] area;
+    static Lock[] mutex;
+    static int readcount[];
 
     private static Boolean arbitrator(int targetObject, String permission) {
         return list.get(targetObject).contains(permission);
@@ -29,41 +24,40 @@ public class DomainAL implements Runnable {
 
     //reader function to run when accessible
     private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
-        mutex.lock();
-        readcount++;
-        if(readcount == 1){
-            area.lock();
+        mutex[resourceRequest].lock();
+        readcount[resourceRequest]++;
+        if(readcount[resourceRequest] == 1){
+            area[resourceRequest].lock();
         }
-        mutex.unlock();
+        mutex[resourceRequest].unlock();
 
         //read here
         System.out.println("D" +threadNum+ ": F" +resourceRequest+ " contains: ''" +object[resourceRequest] + "''");
 
+        mutex[resourceRequest].lock();
+        readcount[resourceRequest]--;
+        if(readcount[resourceRequest] == 0){
+            area[resourceRequest].unlock();
         int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
         //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
         for (int j = 0; j < randInt; j++) Thread.yield();
-
-        mutex.lock();
-        readcount--;
-        if(readcount == 0){
-            area.unlock();
         }
-        mutex.unlock();
+        mutex[resourceRequest].unlock();
     }
 
     // writer function to run when accessible
     private static void writer(int threadNum, int resourceRequest) throws InterruptedException {
-        area.lock();
+        area[resourceRequest].lock();
 
         //write here
         object[resourceRequest] = writerObject[(int) (Math.random() * (6))];
         System.out.println("D" +threadNum+ ": Writing ''" + object[resourceRequest]+ "'' to F" + resourceRequest);
 
+        area[resourceRequest].unlock();
+
         int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
         //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
         for (int j = 0; j < randInt; j++) Thread.yield();
-
-        area.unlock();
     }
 
     //Domain switching method
