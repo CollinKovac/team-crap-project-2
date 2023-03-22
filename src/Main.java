@@ -121,9 +121,10 @@ public class Main {
         DomainAL.area = area;
         DomainAL.mutex = mutex;
         DomainAL.readcount = readcount;
+        DomainAL.list = AL;
 
         // Create domain threads
-        for(int i = 0; i < 1; i++){
+        for(int i = 0; i < N; i++){
             DomainAL domain = new DomainAL(M,N,i,AL,object,mutex,area,readcount);
             Thread myThread = new Thread(domain);
             myThread.start();
