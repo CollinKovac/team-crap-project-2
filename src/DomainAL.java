@@ -1,5 +1,5 @@
 import java.util.*;
-import java.util.concurrent.Semaphore;
+import java.util.Iterator;
 import java.util.concurrent.locks.Lock;
 
 public class DomainAL implements Runnable {
@@ -68,19 +68,23 @@ public class DomainAL implements Runnable {
 
     //Domain switching method
     public static void switchDomain(int currentDomain, int targetDomain, String permission, ArrayList<LinkedList<String>> list) {
-        for (int i = 0; i < M+N; i++) { // For each object + domain, check...
-            if (list.get(i).contains("D" + currentDomain)) { // Current domain in list
-                // Remove current domain
-                list.get(i).remove();
-                if (list.get(i).contains("D" + targetDomain)) { // Target domain in list too
-                    // Add copy of target domain w current domain's name
-                    //list.get(i).add();
+        for (LinkedList<String> i : list) { // For each object + domain...
+            for (String s : i) { // For each entry in linked list...
+                if (s.contains("D" + currentDomain)) { // Current domain found in list
+                    // Remove current domain
+                    i.remove(s);
+                    if (s.contains("D" + targetDomain)) { // Target domain in list
+                        // Add copy of target domain w current domain's name
+                        i.add("Booglie Booglie Boo");
+                        break;
+                    }
                 }
-            } else if (list.get(i).contains("D" + targetDomain)) { // Target domain in list only
-                // Add copy of target domain w current domain's name
+                if (s.contains("D" + targetDomain)) { // Target domain in list
+                    // Add copy of target domain w current domain's name
+                    i.add("Booglie Booglie Boo");
+                    break;
+                }
             }
-            // Case that neither current nor target domains are in linked list
-            // Do nothing!!! :)
         }
         System.out.println("D" + currentDomain + ": Switched to D" + targetDomain);
     }
