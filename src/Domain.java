@@ -72,7 +72,7 @@ public class Domain implements Runnable {
         for(int i = 0; i < 5; i++){
             int request = random.nextInt(M+N-1)+1;
             if (request < M){ // Read or Write
-                int readNwrite = random.nextInt(3);
+                int readNwrite = random.nextInt(2);
                 if(readNwrite == 0) { // Read
                     System.out.println("D" + threadNum + ": Attempting to read F" + request);
                     if(arbitrator(threadPerms, request, "R") || arbitrator(threadPerms, request, "R/W")) { // Check permission to read

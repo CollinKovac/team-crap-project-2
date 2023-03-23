@@ -72,7 +72,7 @@ public class DomainAL implements Runnable {
         for(int i = 0; i < 5; i++){
             int request = random.nextInt(M+N);
             if (request < M){ // Read or Write
-                int readNwrite = random.nextInt(3);
+                int readNwrite = random.nextInt(2);
                 if(readNwrite == 0) { // Read
                     System.out.println("D" + threadNum + ": Attempting to read F" + request);
                     if(arbitrator(request, ("D" + threadPerms + ": R")) || arbitrator(request, ("D" + threadPerms + ": R/W"))) { // Check permission to read
