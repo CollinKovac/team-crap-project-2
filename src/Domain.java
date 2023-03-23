@@ -1,8 +1,5 @@
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
 
 public class Domain implements Runnable {
     static int M;
@@ -80,7 +77,7 @@ public class Domain implements Runnable {
                     } else {
                         System.out.println("D" +this.threadNum+ ": Permission NOT granted to read F" + request);
                         int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
-                        //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
+                        System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
                         for (int j = 0; j < randInt; j++) Thread.yield();
                     }
                 } else { // Write
@@ -90,7 +87,7 @@ public class Domain implements Runnable {
                     } else {
                         System.out.println("D" +this.threadNum+ ": Permission NOT granted to write to F" + request);
                         int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
-                        //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
+                        System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
                         for (int j = 0; j < randInt; j++) Thread.yield();
                     }
                 }

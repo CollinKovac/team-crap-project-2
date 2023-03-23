@@ -44,7 +44,7 @@ public class DomainAL implements Runnable {
         if(readcount[resourceRequest] == 0){
             area[resourceRequest].release();
         int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
-        //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
+        System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
         for (int j = 0; j < randInt; j++) Thread.yield();
         }
         mutex[resourceRequest].release();
@@ -61,7 +61,7 @@ public class DomainAL implements Runnable {
         area[resourceRequest].release();
 
         int randInt = 3 + (int)(Math.random() * ((7 - 3) + 1));
-        //System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
+        System.out.println("D" + threadNum + ": Yielding " + randInt + " times");
         for (int j = 0; j < randInt; j++) Thread.yield();
     }
 
