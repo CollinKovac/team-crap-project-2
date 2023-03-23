@@ -201,9 +201,30 @@ public class Main {
         }
     }
 
+    //method used start a task based on input from the user
+    public static void getParameters(String parameter){
+        switch (parameter){
+            case "-S 1":
+                AccessMatrix();
+                break;
+            case "-S 2":
+                AccessList();
+                break;
+            case "-S 3":
+                CapabilityList();
+                break;
+            default:
+                System.out.println("You did not enter the correct parameter. Please enter '-S 1' or '-S 2' or '-S 3' ");
+        }
+    }
+
     public static void main(String[] args) {
-        AccessMatrix();
-        //AccessList();
-        //CapabilityList();
+
+        if (args.length != 2){
+            System.out.println("You entered the wrong parameters. Please enter '-S 1' or '-S 2' or '-S 3' ");
+            return;
+        }
+        getParameters(args[0] + " " + args[1]);
+
     }
 }
