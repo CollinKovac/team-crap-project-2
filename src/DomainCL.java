@@ -75,10 +75,10 @@ public class DomainCL implements Runnable {
         for(int i = 0; i < 5; i++){
             int request = random.nextInt(M+N);
             if (request < M){ // Read or Write
-                int readNwrite = random.nextInt(3);
+                int readNwrite = random.nextInt(2);
                 if(readNwrite == 0) { // Read
                     System.out.println("D" + threadNum + ": Attempting to read F" + request);
-                    if(arbitrator(threadPerms, ("F" + request + ": R")) || arbitrator(request, ("F" + request + ": R/W"))) { // Check permission to read
+                    if(arbitrator(threadPerms, ("F" + request + ": R")) || arbitrator(threadPerms, ("F" + request + ": R/W"))) { // Check permission to read
                         try {reader(threadNum ,request);} catch (InterruptedException e) {throw new RuntimeException(e);}
                     } else {
                         System.out.println("D" + threadNum + ": Permission NOT granted to read F" + request);
@@ -88,7 +88,7 @@ public class DomainCL implements Runnable {
                     }
                 } else { // Write
                     System.out.println("D" + threadNum + ": Attempting to write to F" + request);
-                    if(arbitrator(threadPerms, ("F" + request + ": W")) || arbitrator(request, ("F" + request + ": R/W"))) { // Check permission to write
+                    if(arbitrator(threadPerms, ("F" + request + ": W")) || arbitrator(threadPerms, ("F" + request + ": R/W"))) { // Check permission to write
                         try {writer(threadNum, request);} catch (InterruptedException e) {throw new RuntimeException(e);}
                     } else {
                         System.out.println("D" + threadNum + ": Permission NOT granted to write to F" + request);
