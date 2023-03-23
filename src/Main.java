@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.concurrent.Semaphore;
 
 public class Main {
+    //End code changes by <Alison Thibodeaux>.
     public static void AccessMatrix() {
         // Get number of domains N
         Random random = new Random();
@@ -130,8 +131,9 @@ public class Main {
             myThread.start();
         }
     }
+    //End code changes by <Alison Thibodeaux>.
 
-
+    //Begin code changes by <Paul Chu>.
     public static void CapabilityList(){
         // Get number of domains N
         Random random = new Random();
@@ -200,7 +202,10 @@ public class Main {
             myThread.start();
         }
     }
+    //End code changes by <Paul Chu>.
 
+
+    //Begin code changes by <Randon Cahanin>.
     //method used start a task based on input from the user
     public static void getParameters(String parameter){
         switch (parameter){
@@ -228,3 +233,5 @@ public class Main {
 
     }
 }
+
+//End code changes by <Randon Cahanin>.

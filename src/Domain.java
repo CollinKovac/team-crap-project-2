@@ -1,6 +1,7 @@
 import java.util.Random;
 import java.util.concurrent.Semaphore;
 
+//Begin code changes by <Randon Cahanin && Alison Thibodeaux>.
 public class Domain implements Runnable {
     static int M;
     static int N;
@@ -18,10 +19,13 @@ public class Domain implements Runnable {
         this.threadPerms = thread;
     }
 
+
     private static Boolean arbitrator(int currentThread, int targetDomain, String permission) {
         return matrix[currentThread][targetDomain].contains(permission);
     }
+    //End code changes by <Randon Cahanin && Alison Thibodeaux>
 
+    //Begin code changes by <Collin Kovac>.
     //reader function to run when accessible
     private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
         mutex[resourceRequest].acquire();
@@ -60,7 +64,9 @@ public class Domain implements Runnable {
         for (int j = 0; j < randInt; j++) Thread.yield();
 
     }
+    //End code changes by <Collin Kovac>.
 
+    //Begin code changes by <Randon Cahanin && Alison Thibodeaux>
     @Override
     public void run() {
         Random random = new Random();
@@ -102,3 +108,4 @@ public class Domain implements Runnable {
         }
     }
 }
+//End code changes by <Randon Cahanin && Alison Thibodeaux>

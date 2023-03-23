@@ -3,6 +3,7 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
 
+//Begin code changes by <Paul Chu && Alison Thibodeaux>
 public class DomainCL implements Runnable {
     private static int M;
     private static int N;
@@ -28,7 +29,10 @@ public class DomainCL implements Runnable {
     private static Boolean arbitrator(int targetObject, String permission) {
         return list.get(targetObject).contains(permission);
     }
+    //End code changes by <Paul Chu && Alison Thibodeaux>
 
+
+    //Begin code changes by <Collin Kovac>.
     //reader function to run when accessible
     private static void reader(int threadNum, int resourceRequest) throws InterruptedException {
         mutex[resourceRequest].acquire();
@@ -67,7 +71,10 @@ public class DomainCL implements Runnable {
 
         area[resourceRequest].release();
     }
+    //End code changes by <Collin Kovac>.
 
+
+    //Begin code changes by <Paul Chu && Alison Thibodeaux>
     @Override
     public void run() {
         Random random = new Random();
@@ -108,3 +115,4 @@ public class DomainCL implements Runnable {
         }
     }
 }
+//End code changes by <Paul Chu && Alison Thibodeaux>
