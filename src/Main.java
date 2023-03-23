@@ -1,7 +1,7 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
     public static void AccessMatrix() {
@@ -108,12 +108,12 @@ public class Main {
         String[] object = {"May chaos take the world!", "A man cannot kill a god...", "Bear witness!",
                 "Thy strength befits a crown.", "I command thee kneel!", "Together, we will devour the very gods!",
                 "Sir Gideon Ofnir, the All-knowing!"};
-        Lock[] area = new Lock[object.length];
-        Lock[] mutex = new Lock[object.length];
+        Semaphore[] area = new Semaphore[object.length];
+        Semaphore[] mutex = new Semaphore[object.length];
         int[] readcount = new int[object.length];
         for (int i = 0; i < M; i++) {
-            area[i] = new ReentrantLock();
-            mutex[i] = new ReentrantLock();
+            area[i] = new Semaphore(1);
+            mutex[i] = new Semaphore(1);
             readcount[i] = 0;
         }
 
@@ -148,16 +148,13 @@ public class Main {
             LinkedList<String> list = new LinkedList<String>();
             for(int j = 0; j < N + M; j++){
                 if(j < M){ // each object does R | W | R/W - I'm unsure if this is correct
-                    readOrWriter = random.nextInt(3);
+                    readOrWriter = random.nextInt(4);
                     if(readOrWriter == 0)
                         list.add("F" + (j + ": R"));
                     else if(readOrWriter == 1)
                         list.add("F" + (j) + ": W");
                     else if(readOrWriter == 2)
                         list.add("F" + (j) + ": R/W");
-                    else{
-                        System.out.println("Index out of bounds, line 159 in CL for domains");
-                    }
                 }
                 else{ // Domain switch access
                     domainSwitch = random.nextInt(2);
@@ -170,7 +167,7 @@ public class Main {
         }
 
         // Print Capability List
-        System.out.print("Domain Count: " + N + "\nObject Count: " + M + "\nCapability List:");
+        System.out.print("\nDomain Count: " + N + "\nObject Count: " + M + "\nCapability List:");
         for (int i = 0; i < N; i++){
             if(i < M)
                 System.out.print("\nD" + i + ": " + capabilityLists.get(i));
@@ -182,12 +179,12 @@ public class Main {
         String[] object = {"May chaos take the world!", "A man cannot kill a god...", "Bear witness!",
                 "Thy strength befits a crown.", "I command thee kneel!", "Together, we will devour the very gods!",
                 "Sir Gideon Ofnir, the All-knowing!"};
-        Lock[] area = new Lock[object.length];
-        Lock[] mutex = new Lock[object.length];
+        Semaphore[] area = new Semaphore[object.length];
+        Semaphore[] mutex = new Semaphore[object.length];
         int[] readcount = new int[object.length];
         for (int i = 0; i < M; i++) {
-            area[i] = new ReentrantLock();
-            mutex[i] = new ReentrantLock();
+            area[i] = new Semaphore(1);
+            mutex[i] = new Semaphore(1);
             readcount[i] = 0;
         }
 
@@ -205,8 +202,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        //AccessMatrix();
+        AccessMatrix();
         //AccessList();
-        CapabilityList();
+        //CapabilityList();
     }
 }
