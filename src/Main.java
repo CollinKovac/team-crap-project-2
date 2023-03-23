@@ -143,8 +143,6 @@ public class Main {
         ArrayList<LinkedList<String>> capabilityLists = new ArrayList<>(0);
         int readOrWriter;
         int domainSwitch;
-        // N = for domains
-        // M = for objects
         //looping through each domain
         for(int i = 0; i < N; i++){
             LinkedList<String> list = new LinkedList<String>();
@@ -158,7 +156,7 @@ public class Main {
                     else if(readOrWriter == 2)
                         list.add("F" + (j) + ": R/W");
                     else{
-                        System.out.println("Index out of bounds, line 44 in CL for domains");
+                        System.out.println("Index out of bounds, line 159 in CL for domains");
                     }
                 }
                 else{ // Domain switch access
@@ -172,7 +170,7 @@ public class Main {
         }
 
         // Print Capability List
-        System.out.print(N + " domains \n" + M + " objects\nCapability List:");
+        System.out.print("Domain Count: " + N + "\nObject Count: " + M + "\nCapability List:");
         for (int i = 0; i < N; i++){
             if(i < M)
                 System.out.print("\nD" + i + ": " + capabilityLists.get(i));
@@ -193,10 +191,10 @@ public class Main {
             readcount[i] = 0;
         }
 
-        DomainAL.object = object;
-        DomainAL.area = area;
-        DomainAL.mutex = mutex;
-        DomainAL.readcount = readcount;
+        DomainCL.object = object;
+        DomainCL.area = area;
+        DomainCL.mutex = mutex;
+        DomainCL.readcount = readcount;
 
         // Create domain threads
         for(int i = 0; i < N; i++){

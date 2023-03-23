@@ -1,5 +1,6 @@
-import java.util.*;
-import java.util.concurrent.Semaphore;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.locks.Lock;
 
 public class DomainCL implements Runnable {
@@ -15,12 +16,12 @@ public class DomainCL implements Runnable {
     static int[] readcount;
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
 
-    public DomainCL(int objects, int domains, int thread, ArrayList<LinkedList<String>> AL, String[] array, Lock[] mutex, Lock[] area, int[] readcount) {
+    public DomainCL(int objects, int domains, int thread, ArrayList<LinkedList<String>> CL, String[] array, Lock[] mutex, Lock[] area, int[] readcount) {
         M = objects;
         N = domains;
         this.threadNum = thread;
         this.threadPerms = thread;
-        list = AL;
+        list = CL;
         object = array;
     }
 
