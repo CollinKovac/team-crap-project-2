@@ -9,7 +9,9 @@ public class Domain implements Runnable {
     private int threadPerms;
     static String[][] matrix;
     static String[] object;
+    //Begin code changes by <Collin Kovac>.
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
+    //End code changes by <Collin Kovac>.
     static Semaphore[] mutex;
     static Semaphore[] area;
     static int[] readcount;

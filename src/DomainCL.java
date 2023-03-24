@@ -15,8 +15,9 @@ public class DomainCL implements Runnable {
     static Semaphore[] area;
     static Semaphore[] mutex;
     static int[] readcount;
+    //Begin code changes by <Collin Kovac>.
     static String[] writerObject = {"Chibaku Tensei", "Kotoamatsukami", "bijudama", "edo tensei", "kamui", "Reaper Death Seal"};
-
+    //End code changes by <Collin Kovac>.
     public DomainCL(int objects, int domains, int thread, ArrayList<LinkedList<String>> CL, String[] array, Semaphore[] mutex, Semaphore[] area, int[] readcount) {
         M = objects;
         N = domains;

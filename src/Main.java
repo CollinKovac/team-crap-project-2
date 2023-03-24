@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.concurrent.Semaphore;
 
 public class Main {
-    //End code changes by <Alison Thibodeaux>.
+    //Begin code changes by <Alison Thibodeaux>.
     public static void AccessMatrix() {
         // Get number of domains N
         Random random = new Random();
@@ -171,10 +171,7 @@ public class Main {
         // Print Capability List
         System.out.print("\nDomain Count: " + N + "\nObject Count: " + M + "\nCapability List:");
         for (int i = 0; i < N; i++){
-            if(i < M)
                 System.out.print("\nD" + i + ": " + capabilityLists.get(i));
-            else
-                System.out.print("\nF" + i + ": " + capabilityLists.get(i));
         }
         System.out.println();
 
